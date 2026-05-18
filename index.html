@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>불규칙 동사 DM 챌린지</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --kakao-bg: #b2c7d9;
+  --kakao-header: #1e2d3d;
+  --kakao-chat-bg: #b2c7d9;
+  --kakao-bubble-me: #fee500;
+  --kakao-bubble-other: #ffffff;
+  --kakao-text: #1e1e1e;
+  --green: #4CAF50;
+  --red: #f44336;
+  --orange: #ff9800;
+  --blue: #2196F3;
+  --purple: #9c27b0;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+body { font-family: 'Noto Sans KR', sans-serif; background: #1a1a2e; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+
+/* PHONE FRAME */
+.phone { width: 390px; height: 844px; background: #fff; border-radius: 44px; overflow: hidden; position: relative; box-shadow: 0 40px 80px rgba(0,0,0,.6), 0 0 0 10px #222; display: flex; flex-direction: column; }
+.phone::before { content:''; position:absolute; top:12px; left:50%; transform:translateX(-50%); width:120px; height:28px; background:#000; border-radius:20px; z-index:999; }
+
+/* SCREENS */
+.screen { position: absolute; inset: 0; display: none; flex-direction: column; }
+.screen.active { display: flex; }
+
+/* ── HOME ── */
+#home { background: #b2c7d9; flex-direction: column; }
+
+.home-header { background: #1e2d3d; padding: 44px 14px 12px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+.home-header-left { display: flex; align-items: center; gap: 10px; }
+.home-header-back { color: rgba(255,255,255,.7); font-size: 18px; cursor: pointer; padding: 2px 6px; }
+.home-header-info {}
+.home-header-title { color: #fff; font-size: 15px; font-weight: 700; }
+.home-header-count { color: rgba(255,255,255,.6); font-weight: 400; }
+.home-header-sub { color: rgba(255,255,255,.5); font-size: 11px; display: flex; align-items: center; gap: 5px; margin-top: 2px; }
+.home-live-dot { width: 7px; height: 7px; background: #4caf50; border-radius: 50%; display: inline-block; }
+.home-header-right {}
+.home-score-badge { background: rgba(255,255,255,.13); border-radius: 14px; padding: 6px 14px; text-align: center; min-width: 64px; }
+.home-score-icon { font-size: 18px; }
+.home-score-label { font-size: 10px; color: rgba(255,255,255,.55); margin-top: 1px; }
+.home-score-val { font-size: 16px; font-weight: 900; color: #fee500; }
+
+.home-body { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 0 24px 24px; overflow-y: auto; }
+.home-flame { font-size: 72px; margin-top: 48px; margin-bottom: 12px; filter: drop-shadow(0 4px 12px rgba(255,120,0,.4)); animation: flamePulse 2s ease-in-out infinite; }
+@keyframes flamePulse { 0%,100%{transform:scale(1);} 50%{transform:scale(1.06);} }
+.home-main-title { font-size: 22px; font-weight: 900; color: #1e1e1e; margin-bottom: 6px; }
+.home-main-sub { font-size: 13px; color: #555; margin-bottom: 32px; font-style: italic; }
+
+.home-name-input { width: 100%; padding: 16px 20px; border-radius: 14px; border: none; background: #f0f0f0; font-family: inherit; font-size: 15px; color: #333; outline: none; margin-bottom: 12px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,.08); }
+.home-name-input::placeholder { color: #aaa; }
+.home-name-input:focus { background: #fff; box-shadow: 0 2px 16px rgba(0,0,0,.13); }
+
+.home-enter-btn { width: 100%; padding: 18px; border-radius: 14px; border: none; background: #fee500; color: #1a1a1a; font-family: inherit; font-size: 17px; font-weight: 900; cursor: pointer; box-shadow: 0 4px 16px rgba(254,229,0,.5); transition: transform .1s, box-shadow .1s; margin-bottom: 20px; }
+.home-enter-btn:active { transform: scale(.97); box-shadow: 0 2px 8px rgba(254,229,0,.3); }
+
+.home-modes { width: 100%; }
+.home-modes-title { font-size: 13px; font-weight: 700; color: #444; margin-bottom: 12px; text-align: center; }
+.mode-row-btn { width: 100%; display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,.85); border: none; border-radius: 14px; padding: 12px 14px; margin-bottom: 8px; cursor: pointer; font-family: inherit; text-align: left; transition: transform .1s, background .1s; box-shadow: 0 2px 8px rgba(0,0,0,.07); }
+.mode-row-btn:active { transform: scale(.98); background: rgba(255,255,255,1); }
+.mode-row-icon { font-size: 24px; width: 36px; text-align: center; flex-shrink: 0; }
+.mode-row-info { flex: 1; }
+.mode-row-info b { font-size: 14px; color: #1e1e1e; }
+.mode-row-info small { font-size: 11px; color: #888; display: block; margin-top: 2px; }
+.mode-row-best { font-size: 11px; color: #ff9800; white-space: nowrap; }
+.mode-row-best b { font-size: 13px; }
+
+
+#chat { background: var(--kakao-chat-bg); }
+.chat-header { background: var(--kakao-header); padding: 54px 16px 14px; display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+.chat-back { color: #fff; font-size: 22px; cursor: pointer; padding: 4px 8px; }
+.chat-avatar { width: 40px; height: 40px; background: #fee500; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+.chat-meta { flex: 1; }
+.chat-name { color: #fff; font-weight: 700; font-size: 15px; }
+.chat-count { color: rgba(255,255,255,.5); font-size: 12px; }
+.chat-live { width: 8px; height: 8px; background: #4caf50; border-radius: 50%; }
+.chat-score-bar { background: rgba(0,0,0,.2); padding: 8px 16px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+.chat-score-label { color: rgba(255,255,255,.7); font-size: 12px; }
+.chat-score-val { color: #fee500; font-weight: 900; font-size: 18px; }
+.chat-messages { flex: 1; overflow-y: auto; padding: 12px 16px; display: flex; flex-direction: column; gap: 8px; }
+.msg { max-width: 75%; animation: msgIn .2s ease; }
+@keyframes msgIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+.msg.other { align-self: flex-start; }
+.msg.me { align-self: flex-end; }
+.msg-sender { font-size: 11px; color: #555; margin-bottom: 3px; display: flex; align-items: center; gap: 6px; }
+.msg-avatar { width: 28px; height: 28px; background: #fee500; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+.msg-row { display: flex; align-items: flex-end; gap: 6px; }
+.msg-row.me { flex-direction: row-reverse; }
+.bubble { padding: 10px 14px; border-radius: 18px; font-size: 14px; line-height: 1.5; }
+.bubble.other { background: #fff; color: #1e1e1e; border-top-left-radius: 4px; }
+.bubble.me { background: #fee500; color: #1a1a1a; border-top-right-radius: 4px; }
+.bubble.correct { background: #e8f5e9; border: 2px solid #4caf50; }
+.bubble.wrong { background: #fce4ec; border: 2px solid #f44336; }
+.msg-time { font-size: 10px; color: rgba(0,0,0,.4); }
+.chat-input-area { background: #fff; border-top: 1px solid rgba(0,0,0,.1); padding: 10px 12px; flex-shrink: 0; }
+.chat-choices { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.choice-btn { padding: 12px; border-radius: 12px; border: 1.5px solid rgba(0,0,0,.12); background: #fff; font-family: inherit; font-size: 14px; font-weight: 700; cursor: pointer; transition: all .12s; color: #1e1e1e; }
+.choice-btn:hover { background: #f5f5f5; }
+.choice-btn:active { transform: scale(.96); }
+.choice-btn.correct { background: #e8f5e9; border-color: #4caf50; color: #2e7d32; }
+.choice-btn.wrong { background: #fce4ec; border-color: #f44336; color: #c62828; }
+.penalty-toast { position: absolute; bottom: 120px; left: 50%; transform: translateX(-50%); background: rgba(244,67,54,.9); color: #fff; padding: 8px 20px; border-radius: 20px; font-size: 13px; font-weight: 700; pointer-events: none; opacity: 0; transition: opacity .3s; white-space: nowrap; }
+
+/* ── RANDOM ── */
+#random { background: #0d1b2a; }
+.game-header { padding: 54px 16px 14px; display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+.back-btn { color: #fff; font-size: 22px; cursor: pointer; padding: 4px 8px; }
+.game-title { color: #fff; font-weight: 700; font-size: 16px; flex: 1; }
+.progress-wrap { padding: 0 16px 12px; flex-shrink: 0; }
+.progress-bar { height: 6px; background: rgba(255,255,255,.15); border-radius: 3px; overflow: hidden; }
+.progress-fill { height: 100%; background: linear-gradient(90deg,#fee500,#ff9800); border-radius: 3px; transition: width .3s; }
+.score-display { display: flex; gap: 16px; padding: 0 16px 16px; flex-shrink: 0; }
+.score-card { background: rgba(255,255,255,.07); border-radius: 12px; padding: 8px 14px; text-align: center; flex: 1; }
+.score-card .sv { font-size: 22px; font-weight: 900; color: #fff; }
+.score-card .sl { font-size: 11px; color: rgba(255,255,255,.5); }
+.sv.ok { color: #4caf50; }
+.sv.ng { color: #f44336; }
+.q-card { margin: 0 16px 20px; background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1); border-radius: 24px; padding: 28px 20px; text-align: center; flex-shrink: 0; }
+.q-tag { font-size: 11px; color: rgba(255,255,255,.4); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; }
+.q-main { font-size: 36px; font-weight: 900; color: #fff; margin-bottom: 4px; }
+.q-hint { font-size: 13px; color: rgba(255,255,255,.5); }
+.choices-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 0 16px; }
+.rand-choice { padding: 16px; border-radius: 16px; border: 1.5px solid rgba(255,255,255,.15); background: rgba(255,255,255,.07); font-family: inherit; font-size: 15px; font-weight: 700; color: #fff; cursor: pointer; transition: all .12s; }
+.rand-choice:hover { background: rgba(255,255,255,.12); }
+.rand-choice.correct { background: rgba(76,175,80,.3); border-color: #4caf50; color: #a5d6a7; }
+.rand-choice.wrong { background: rgba(244,67,54,.3); border-color: #f44336; color: #ef9a9a; }
+.next-btn { margin: 16px; padding: 16px; border-radius: 16px; border: none; background: #fee500; color: #1a1a1a; font-family: inherit; font-size: 15px; font-weight: 900; cursor: pointer; width: calc(100% - 32px); transition: transform .1s; }
+.next-btn:active { transform: scale(.98); }
+.fb-bar { height: 48px; margin: 12px 16px 0; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; }
+.fb-bar.ok { background: rgba(76,175,80,.2); color: #4caf50; }
+.fb-bar.ng { background: rgba(244,67,54,.2); color: #f44336; }
+
+/* ── SPEED ── */
+#speed { background: #3a3580; }
+
+.sp-header { background: #2e2a6e; padding: 44px 14px 12px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+.sp-header-left { display: flex; align-items: center; gap: 10px; }
+.sp-header-info {}
+.sp-header-title { color: #fff; font-size: 15px; font-weight: 700; }
+.sp-header-count { color: rgba(255,255,255,.6); font-weight: 400; }
+.sp-header-sub { color: rgba(255,255,255,.5); font-size: 11px; display: flex; align-items: center; gap: 5px; margin-top: 2px; }
+.sp-live-dot { width: 7px; height: 7px; background: #4caf50; border-radius: 50%; display: inline-block; }
+.sp-score-badge { background: rgba(255,255,255,.13); border-radius: 14px; padding: 6px 14px; text-align: center; min-width: 64px; }
+.sp-score-icon { font-size: 18px; }
+.sp-score-label { font-size: 10px; color: rgba(255,255,255,.55); margin-top: 1px; }
+.sp-score-val { font-size: 16px; font-weight: 900; color: #fee500; }
+
+.sp-info-bar { display: flex; align-items: center; justify-content: space-between; padding: 14px 20px 8px; flex-shrink: 0; }
+.sp-time-wrap { display: flex; align-items: baseline; gap: 8px; }
+.sp-time-label { font-size: 12px; font-weight: 700; color: rgba(255,255,255,.6); letter-spacing: 1px; }
+.sp-time-val { font-size: 28px; font-weight: 900; color: #fee500; font-variant-numeric: tabular-nums; transition: color .3s; }
+.sp-time-val.danger { color: #f44336; }
+.sp-combo-wrap { display: flex; align-items: center; gap: 6px; }
+.sp-combo-val { font-size: 28px; font-weight: 900; color: #fff; }
+.sp-combo-label { font-size: 16px; font-weight: 700; color: rgba(255,255,255,.8); }
+.sp-combo-fire { font-size: 20px; }
+.sp-combo-wrap.active .sp-combo-val { color: #fee500; animation: comboPop .3s ease; }
+@keyframes comboPop { 0%{transform:scale(1);} 50%{transform:scale(1.4);} 100%{transform:scale(1);} }
+
+.sp-verb-card { margin: 8px 16px 14px; background: rgba(255,255,255,.12); border-radius: 20px; padding: 18px 20px; text-align: center; flex-shrink: 0; }
+.sp-verb-word { font-size: 32px; font-weight: 900; color: #fff; margin-bottom: 2px; }
+.sp-verb-meaning { font-size: 13px; color: rgba(255,255,255,.55); margin-bottom: 14px; }
+.sp-step-bar { display: flex; align-items: center; justify-content: center; gap: 10px; }
+.sp-step { background: rgba(255,255,255,.1); border: 2px solid rgba(255,255,255,.2); border-radius: 12px; padding: 8px 14px; text-align: center; min-width: 100px; transition: all .2s; }
+.sp-step.active { border-color: #fee500; background: rgba(254,229,0,.15); }
+.sp-step.done { border-color: #4caf50; background: rgba(76,175,80,.2); }
+.sp-step-label { display: block; font-size: 10px; color: rgba(255,255,255,.5); letter-spacing: .5px; margin-bottom: 4px; }
+.sp-step-val { display: block; font-size: 16px; font-weight: 900; color: #fff; }
+.sp-step.active .sp-step-val { color: #fee500; }
+.sp-step.done .sp-step-val { color: #a5d6a7; }
+.sp-step-arrow { font-size: 18px; color: rgba(255,255,255,.4); }
+
+.sp-choices { flex: 1; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; padding: 0 16px; align-content: start; }
+.sp-choice-btn { padding: 14px 8px; border-radius: 14px; border: 2px solid rgba(255,255,255,.2); background: rgba(255,255,255,.12); font-family: inherit; font-size: 15px; font-weight: 700; color: #fff; cursor: pointer; transition: all .1s; text-align: center; }
+.sp-choice-btn:active { transform: scale(.94); }
+.sp-choice-btn.correct { background: rgba(76,175,80,.5); border-color: #4caf50; color: #fff; animation: correctFlash .3s; }
+.sp-choice-btn.wrong { background: rgba(244,67,54,.4); border-color: #f44336; animation: wrongShake .3s; }
+.sp-choice-btn.disabled { opacity: .4; pointer-events: none; }
+@keyframes correctFlash { 0%{transform:scale(1);} 40%{transform:scale(1.1);} 100%{transform:scale(1);} }
+@keyframes wrongShake { 0%,100%{transform:translateX(0);} 25%{transform:translateX(-5px);} 75%{transform:translateX(5px);} }
+
+.sp-exit-wrap { padding: 12px 16px 20px; flex-shrink: 0; text-align: center; }
+.sp-exit-btn { background: rgba(255,255,255,.15); border: 1.5px solid rgba(255,255,255,.25); border-radius: 20px; color: rgba(255,255,255,.7); font-family: inherit; font-size: 13px; font-weight: 700; padding: 8px 24px; cursor: pointer; }
+.sp-exit-btn:active { background: rgba(255,255,255,.25); }
+
+
+/* ── RANDOM INPUT ── */
+.rand-input-wrap { padding: 0 16px; display: flex; flex-direction: column; gap: 12px; }
+.rand-input-row { display: flex; flex-direction: column; gap: 6px; }
+.rand-label { font-size: 11px; font-weight: 700; color: rgba(255,255,255,.45); letter-spacing: .8px; text-transform: uppercase; }
+.rand-input-box { display: flex; align-items: center; background: rgba(255,255,255,.07); border: 1.5px solid rgba(255,255,255,.15); border-radius: 14px; padding: 0 14px; transition: border-color .15s; }
+.rand-input-box:focus-within { border-color: #fee500; }
+.rand-input-box.ok { border-color: #4caf50; background: rgba(76,175,80,.15); }
+.rand-input-box.ng { border-color: #f44336; background: rgba(244,67,54,.15); }
+.rand-inp { flex: 1; background: transparent; border: none; outline: none; padding: 14px 0; font-family: inherit; font-size: 18px; font-weight: 700; color: #fff; caret-color: #fee500; }
+.rand-inp::placeholder { color: rgba(255,255,255,.25); font-weight: 400; }
+.rand-inp-check { font-size: 20px; min-width: 24px; text-align: center; }
+.rand-inp.revealed { color: #f44336; }
+.rand-inp.revealed-ok { color: #4caf50; }
+
+
+#result { background: linear-gradient(160deg,#1a2f1a,#0d1b0d); align-items: center; justify-content: center; padding: 80px 24px 40px; }
+.result-icon { font-size: 72px; margin-bottom: 16px; animation: popIn .5s cubic-bezier(.175,.885,.32,1.275); }
+@keyframes popIn { from{transform:scale(0);} to{transform:scale(1);} }
+.result-score { font-size: 64px; font-weight: 900; color: #fee500; margin-bottom: 4px; }
+.result-label { color: rgba(255,255,255,.6); font-size: 14px; margin-bottom: 32px; }
+.result-stats { width: 100%; background: rgba(255,255,255,.07); border-radius: 20px; padding: 20px; margin-bottom: 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.rs { text-align: center; }
+.rs .rv { font-size: 24px; font-weight: 900; color: #fff; }
+.rs .rl { font-size: 12px; color: rgba(255,255,255,.5); margin-top: 2px; }
+.play-again { width: 100%; padding: 18px; border-radius: 16px; border: none; background: #fee500; color: #1a1a1a; font-family: inherit; font-size: 16px; font-weight: 900; cursor: pointer; margin-bottom: 12px; }
+.home-again { width: 100%; padding: 14px; border-radius: 16px; border: 1.5px solid rgba(255,255,255,.2); background: transparent; color: rgba(255,255,255,.7); font-family: inherit; font-size: 14px; font-weight: 700; cursor: pointer; }
+
+/* Floating score pop */
+.score-pop { position: absolute; font-size: 20px; font-weight: 900; pointer-events: none; animation: scorePop .8s forwards; z-index: 100; }
+@keyframes scorePop { 0%{opacity:1;transform:translateY(0) scale(1);} 100%{opacity:0;transform:translateY(-60px) scale(1.3);} }
+</style>
+</head>
+<body>
+
+<!-- HOME -->
+<div class="phone">
+
+<div id="home" class="screen active">
+  <!-- 카카오 스타일 상단 헤더 -->
+  <div class="home-header">
+    <div class="home-header-left">
+      <div class="home-header-back">◀</div>
+      <div class="home-header-info">
+        <div class="home-header-title">영단어 고수들 모임 <span class="home-header-count">(12)</span></div>
+        <div class="home-header-sub">실시간 참여 중 <span class="home-live-dot"></span></div>
+      </div>
+    </div>
+    <div class="home-header-right">
+      <div class="home-score-badge">
+        <div class="home-score-icon">😊</div>
+        <div class="home-score-label" id="home-player-name">나의 점수</div>
+        <div class="home-score-val" id="home-score-display">0</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 중앙 콘텐츠 -->
+  <div class="home-body">
+    <div class="home-flame">🔥</div>
+    <div class="home-main-title">불규칙 동사 마스터</div>
+    <div class="home-main-sub">함께 연습하고 단어 고수가 되어보자!</div>
+
+    <!-- 이름 입력 -->
+    <input id="home-name-input" class="home-name-input" type="text" placeholder="이름을 입력해봐!" maxlength="10">
+
+    <!-- 단톡방 입장 버튼 -->
+    <button class="home-enter-btn" onclick="enterRoom()">단톡방 입장</button>
+
+    <!-- 모드 선택 (입장 후 표시) -->
+    <div class="home-modes" id="home-modes" style="display:none">
+      <div class="home-modes-title">🎮 게임 모드 선택</div>
+      <button class="mode-row-btn" onclick="startChat()">
+        <span class="mode-row-icon">💬</span>
+        <span class="mode-row-info"><b>단톡방 챌린지</b><br><small>단체 채팅방에서 퀴즈 풀기</small></span>
+        <span class="mode-row-best">BEST <b id="best-chat">0</b></span>
+      </button>
+      <button class="mode-row-btn" onclick="startRandom()">
+        <span class="mode-row-icon">🌍</span>
+        <span class="mode-row-info"><b>무작위 챌린지</b><br><small>과거형·과거분사 직접 입력</small></span>
+        <span class="mode-row-best">BEST <b id="best-random">0</b></span>
+      </button>
+      <button class="mode-row-btn" onclick="startSpeed()">
+        <span class="mode-row-icon">⚡</span>
+        <span class="mode-row-info"><b>스피드 블록 팡</b><br><small>시간 내에 짝 맞추기</small></span>
+        <span class="mode-row-best">BEST <b id="best-speed">0</b></span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- CHAT -->
+<div id="chat" class="screen">
+  <div class="chat-header">
+    <div class="chat-back" onclick="goHome()">‹</div>
+    <div class="chat-avatar">📚</div>
+    <div class="chat-meta">
+      <div class="chat-name">영단어 고수들 모임</div>
+      <div class="chat-count">12명 참여 중</div>
+    </div>
+    <div class="chat-live"></div>
+  </div>
+  <div class="chat-score-bar">
+    <div class="chat-score-label"><span id="chat-player-name">나</span>의 점수</div>
+    <div class="chat-score-val" id="chat-score">0</div>
+  </div>
+  <div class="chat-messages" id="chat-messages"></div>
+  <div class="chat-input-area">
+    <div class="chat-choices" id="chat-choices"></div>
+  </div>
+  <div class="penalty-toast" id="penalty-toast"></div>
+</div>
+
+<!-- RANDOM -->
+<div id="random" class="screen">
+  <div class="game-header">
+    <div class="back-btn" onclick="goHome()">‹</div>
+    <div class="game-title">전체 무작위 챌린지</div>
+    <div style="color:rgba(255,255,255,.7);font-size:13px;font-weight:700;" id="rand-player-name">나</div>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-bar"><div class="progress-fill" id="rand-prog" style="width:0%"></div></div>
+  </div>
+  <div class="score-display">
+    <div class="score-card"><div class="sv ok" id="rand-ok">0</div><div class="sl">정답</div></div>
+    <div class="score-card"><div class="sv ng" id="rand-ng">0</div><div class="sl">오답</div></div>
+    <div class="score-card"><div class="sv" id="rand-score" style="color:#fee500">0</div><div class="sl">점수</div></div>
+    <div class="score-card"><div class="sv" id="rand-counter" style="color:rgba(255,255,255,.6);font-size:16px">0/30</div><div class="sl">진행</div></div>
+  </div>
+  <div class="q-card">
+    <div class="q-tag">과거형과 과거분사를 입력하세요</div>
+    <div class="q-main" id="rand-qword">-</div>
+    <div class="q-hint" id="rand-qhint"></div>
+  </div>
+  <div class="rand-input-wrap">
+    <div class="rand-input-row">
+      <label class="rand-label">과거형 (V2)</label>
+      <div class="rand-input-box">
+        <input id="rand-inp-p" class="rand-inp" type="text" placeholder="입력..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+        <span class="rand-inp-check" id="rand-check-p"></span>
+      </div>
+    </div>
+    <div class="rand-input-row">
+      <label class="rand-label">과거분사 (V3 / p.p)</label>
+      <div class="rand-input-box">
+        <input id="rand-inp-pp" class="rand-inp" type="text" placeholder="입력..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+        <span class="rand-inp-check" id="rand-check-pp"></span>
+      </div>
+    </div>
+    <button class="next-btn" id="rand-submit-btn" onclick="randSubmit()">확인 ✓</button>
+  </div>
+  <div class="fb-bar" id="rand-fb" style="display:none"></div>
+  <button class="next-btn" id="rand-next" onclick="randNext()" style="display:none;margin:0 16px;width:calc(100% - 32px)">다음 →</button>
+</div>
+
+<!-- SPEED -->
+<div id="speed" class="screen">
+  <!-- 카카오 스타일 헤더 -->
+  <div class="sp-header">
+    <div class="sp-header-left">
+      <div class="back-btn" onclick="goHome()">‹</div>
+      <div class="sp-header-info">
+        <div class="sp-header-title">영단어 고수들 모임 <span class="sp-header-count">(12)</span></div>
+        <div class="sp-header-sub">실시간 참여 중 <span class="sp-live-dot"></span></div>
+      </div>
+    </div>
+    <div class="sp-score-badge">
+      <div class="sp-score-icon">😊</div>
+      <div class="sp-score-label" id="sp-player-name">나의 점수</div>
+      <div class="sp-score-val" id="sp-score">0</div>
+    </div>
+  </div>
+
+  <!-- TIME + COMBO 바 -->
+  <div class="sp-info-bar">
+    <div class="sp-time-wrap">
+      <span class="sp-time-label">TIME</span>
+      <span class="sp-time-val" id="sp-time-val">60.0</span>
+    </div>
+    <div class="sp-combo-wrap" id="sp-combo-wrap">
+      <span class="sp-combo-val" id="sp-combo">0</span>
+      <span class="sp-combo-label">COMBO!</span>
+      <span class="sp-combo-fire">🔥</span>
+    </div>
+  </div>
+
+  <!-- 동사 카드 -->
+  <div class="sp-verb-card">
+    <div class="sp-verb-word" id="sp-verb-word">-</div>
+    <div class="sp-verb-meaning" id="sp-verb-meaning"></div>
+    <div class="sp-step-bar">
+      <div class="sp-step" id="sp-step-1">
+        <span class="sp-step-label">과거형 (V2)</span>
+        <span class="sp-step-val" id="sp-step-val-1">?</span>
+      </div>
+      <div class="sp-step-arrow">→</div>
+      <div class="sp-step" id="sp-step-2">
+        <span class="sp-step-label">과거분사 (V3)</span>
+        <span class="sp-step-val" id="sp-step-val-2">?</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 9개 보기 버튼 (3×3) -->
+  <div class="sp-choices" id="sp-choices"></div>
+
+  <!-- 나가기 버튼 -->
+  <div class="sp-exit-wrap">
+    <button class="sp-exit-btn" onclick="goHome()">그만하고 나가기</button>
+  </div>
+</div>
+
+
+<!-- RESULT -->
+<div id="result" class="screen">
+  <div class="result-icon" id="res-icon">🎉</div>
+  <div class="result-score" id="res-score">0</div>
+  <div class="result-label" id="res-label">점수</div>
+  <div class="result-stats" id="res-stats"></div>
+  <button class="play-again" onclick="playAgain()">다시 도전!</button>
+  <button class="home-again" onclick="goHome()">홈으로</button>
+</div>
+
+</div><!-- .phone -->
+
+<script>
+const VERBS=[
+  {b:'make',p:'made',pp:'made',m:'만들다'},
+  {b:'build',p:'built',pp:'built',m:'짓다'},
+  {b:'break',p:'broke',pp:'broken',m:'깨다'},
+  {b:'write',p:'wrote',pp:'written',m:'쓰다'},
+  {b:'speak',p:'spoke',pp:'spoken',m:'말하다'},
+  {b:'take',p:'took',pp:'taken',m:'가져가다'},
+  {b:'give',p:'gave',pp:'given',m:'주다'},
+  {b:'see',p:'saw',pp:'seen',m:'보다'},
+  {b:'know',p:'knew',pp:'known',m:'알다'},
+  {b:'find',p:'found',pp:'found',m:'찾다'},
+  {b:'use',p:'used',pp:'used',m:'사용하다'},
+  {b:'call',p:'called',pp:'called',m:'부르다'},
+  {b:'send',p:'sent',pp:'sent',m:'보내다'},
+  {b:'buy',p:'bought',pp:'bought',m:'사다'},
+  {b:'bring',p:'brought',pp:'brought',m:'가져오다'},
+  {b:'teach',p:'taught',pp:'taught',m:'가르치다'},
+  {b:'catch',p:'caught',pp:'caught',m:'잡다'},
+  {b:'eat',p:'ate',pp:'eaten',m:'먹다'},
+  {b:'keep',p:'kept',pp:'kept',m:'유지하다'},
+  {b:'leave',p:'left',pp:'left',m:'떠나다'},
+  {b:'pay',p:'paid',pp:'paid',m:'지불하다'},
+  {b:'say',p:'said',pp:'said',m:'말하다'},
+  {b:'sell',p:'sold',pp:'sold',m:'팔다'},
+  {b:'tell',p:'told',pp:'told',m:'말해주다'},
+  {b:'think',p:'thought',pp:'thought',m:'생각하다'},
+  {b:'hold',p:'held',pp:'held',m:'잡다'},
+  {b:'cut',p:'cut',pp:'cut',m:'자르다'},
+  {b:'put',p:'put',pp:'put',m:'놓다'},
+  {b:'close',p:'closed',pp:'closed',m:'닫다'},
+  {b:'fix',p:'fixed',pp:'fixed',m:'고치다'}
+];
+
+const PRAISE_BOT=[
+  '정답! 🎉','Perfect! 🌟','Wonderful! ✨','Excellent! 💯','Amazing! 🔥',
+  'Brilliant! 🏆','Genius! 🧠','Outstanding! 👏','Superb! 🎯','Fantastic! 🚀',
+  '완벽해! 🥳','대단해! 💪','역시! 😎','천재인가봐! 🤩','너무 잘했어! 🌈'
+];
+const PRAISE_FB=[
+  '✓ 정답! Perfect!','✓ Wonderful! 완벽!','✓ Excellent! 최고!','✓ Amazing! 대단해!',
+  '✓ Brilliant! 👏','✓ Fantastic! 🔥','✓ Outstanding! 🏆','✓ Genius! 🧠',
+  '✓ Superb! 🎯','✓ 완벽 정답! 🌟'
+];
+function randPraise(arr){return arr[Math.floor(Math.random()*arr.length)];}
+
+
+const BOTS=['민지','하늘','준혁','소연','태형'];
+const BOT_EMOJIS=['🐱','🐶','🦊','🐰','🐼'];
+let currentMode='', currentIdx=0;
+const bests={chat:0,random:0,speed:0};
+
+let playerName = '나';
+
+function enterRoom(){
+  const inp = document.getElementById('home-name-input');
+  const name = inp.value.trim();
+  if(name) playerName = name;
+  // 각 화면에 이름 반영
+  document.getElementById('home-player-name').textContent = playerName;
+  document.getElementById('chat-player-name').textContent = playerName;
+  document.getElementById('rand-player-name').textContent = playerName;
+  document.getElementById('sp-player-name').textContent = playerName+'의 점수';
+  // 입장 버튼/입력창 숨기고 모드 선택 표시
+  inp.style.display = 'none';
+  document.querySelector('.home-enter-btn').style.display = 'none';
+  document.getElementById('home-modes').style.display = 'block';
+  // 불꽃 & 타이틀 위로 올리기
+  document.querySelector('.home-flame').style.marginTop = '20px';
+}
+
+function goHome(){
+  clearTimers();
+  // 홈 점수 합산 표시
+  const total = bests.chat + bests.random + bests.speed;
+  document.getElementById('home-score-display').textContent = total;
+  showScreen('home');
+}
+
+function shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];}return b;}
+function getRand(arr,n){return shuffle(arr).slice(0,n);}
+function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');}
+function clearTimers(){if(window._timers)window._timers.forEach(clearInterval);window._timers=[];}
+function addTimer(t){if(!window._timers)window._timers=[];window._timers.push(t);}
+function updateBest(mode,val){if(val>bests[mode]){bests[mode]=val;document.getElementById('best-'+mode).textContent=val;}}
+
+// ──── CHAT MODE ────
+let chatScore=0, chatPool=[], chatCurrent=null, chatAnswered=false, chatPenaltyTimer=null, chatCount=0, chatOk=0, chatNg=0;
+const CHAT_TOTAL=30;
+const QTYPES=['V1→V2','V1→V3','V3→V1','M→V1'];
+
+function startChat(){
+  chatScore=0; chatPool=shuffle(VERBS); chatAnswered=false; chatCount=0; chatOk=0; chatNg=0;
+  document.getElementById('chat-score').textContent='0';
+  document.getElementById('chat-messages').innerHTML='';
+  showScreen('chat');
+  setTimeout(()=>chatSendSystemMsg('📢 불규칙 동사 챌린지 시작! 30문제를 풀어보세요 🔥'),300);
+  setTimeout(()=>chatNextQ(),1200);
+}
+
+function chatSendSystemMsg(txt){
+  const msgs=document.getElementById('chat-messages');
+  const d=document.createElement('div');
+  d.style.cssText='text-align:center;font-size:11px;color:rgba(0,0,0,.4);padding:4px 0;';
+  d.textContent=txt;
+  msgs.appendChild(d);
+  msgs.scrollTop=msgs.scrollHeight;
+}
+
+function chatNextQ(){
+  if(chatCount>=CHAT_TOTAL){
+    // 30문제 완료
+    document.getElementById('chat-choices').innerHTML='';
+    chatSendSystemMsg(`🏁 30문제 완료! 최종 점수: ${chatScore}점`);
+    setTimeout(()=>{
+      updateBest('chat',chatScore);
+      showResult('chat',chatScore,{정답:chatOk,오답:chatNg,점수:chatScore});
+    },1800);
+    return;
+  }
+  chatAnswered=false;
+  chatCurrent=chatPool.pop();
+  chatCount++;
+  const qtype=QTYPES[Math.floor(Math.random()*QTYPES.length)];
+  chatCurrent._qtype=qtype;
+  let question,answerField,promptText;
+  if(qtype==='V1→V2'){question=chatCurrent.b;answerField='p';promptText=`[${chatCount}/${CHAT_TOTAL}] "${question}"의 과거형은?`;}
+  else if(qtype==='V1→V3'){question=chatCurrent.b;answerField='pp';promptText=`[${chatCount}/${CHAT_TOTAL}] "${question}"의 과거분사(p.p)는?`;}
+  else if(qtype==='V3→V1'){question=chatCurrent.pp;answerField='b';promptText=`[${chatCount}/${CHAT_TOTAL}] 과거분사 "${question}"의 원형은?`;}
+  else{question=chatCurrent.m;answerField='b';promptText=`[${chatCount}/${CHAT_TOTAL}] "${question}"의 영어 원형은?`;}
+  chatCurrent._answerField=answerField;
+
+  const botIdx=Math.floor(Math.random()*BOTS.length);
+  setTimeout(()=>{
+    chatAddMsg(BOTS[botIdx],BOT_EMOJIS[botIdx],promptText,false);
+    setTimeout(()=>chatShowChoices(answerField),1000);
+  },200);
+}
+
+function chatShowChoices(field){
+  const correct=chatCurrent[field];
+  const wrongs=shuffle(VERBS.filter(v=>v[field]!==correct)).slice(0,3).map(v=>v[field]);
+  const choices=shuffle([correct,...wrongs]);
+  const cc=document.getElementById('chat-choices');
+  cc.innerHTML='';
+  choices.forEach(c=>{
+    const b=document.createElement('button');
+    b.className='choice-btn';
+    b.textContent=c;
+    b.onclick=()=>chatAnswer(c,correct,b);
+    cc.appendChild(b);
+  });
+}
+
+function chatAnswer(chosen,correct,btn){
+  if(chatAnswered)return;
+  chatAnswered=true;
+  const isCorrect=chosen===correct;
+  const field=chatCurrent._answerField;
+
+  if(isCorrect){
+    btn.classList.add('correct');
+    chatScore+=10; chatOk++;
+    chatAddMsg(playerName,'🌟',`${chosen} ✓`,true,'correct');
+    chatAddMsg(BOTS[Math.floor(Math.random()*BOTS.length)],BOT_EMOJIS[Math.floor(Math.random()*BOT_EMOJIS.length)],randPraise(PRAISE_BOT),false);
+    document.getElementById('chat-score').textContent=chatScore;
+  } else {
+    btn.classList.add('wrong');
+    document.querySelectorAll('.choice-btn').forEach(b=>{if(b.textContent===correct)b.classList.add('correct');});
+    chatScore=Math.max(0,chatScore-10); chatNg++;
+    chatAddMsg(playerName,'🌟',`${chosen} ✗`,true,'wrong');
+    chatAddMsg(BOTS[1],BOT_EMOJIS[1],`아쉽! 정답은 "${correct}" 🥲`,false);
+    document.getElementById('chat-score').textContent=chatScore;
+    showPenalty();
+  }
+  document.getElementById('chat-choices').innerHTML='';
+  setTimeout(()=>chatNextQ(),isCorrect?1500:3000);
+}
+
+function chatAddMsg(name,emoji,text,isMe,extra=''){
+  const msgs=document.getElementById('chat-messages');
+  const wrap=document.createElement('div');
+  wrap.className='msg '+(isMe?'me':'other');
+  const row=document.createElement('div');
+  row.className='msg-row '+(isMe?'me':'');
+  if(!isMe){
+    const av=document.createElement('div');
+    av.className='msg-avatar';av.textContent=emoji;
+    const meta=document.createElement('div');
+    meta.style.cssText='display:flex;flex-direction:column;gap:2px;';
+    meta.innerHTML=`<div style="font-size:11px;color:#555;margin-left:4px">${name}</div>`;
+    const bub=document.createElement('div');
+    bub.className='bubble other'+(extra?' '+extra:'');
+    bub.textContent=text;
+    meta.appendChild(bub);
+    row.appendChild(av);row.appendChild(meta);
+  } else {
+    const time=document.createElement('div');
+    time.className='msg-time';
+    const now=new Date();
+    time.textContent=`${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')}`;
+    const bub=document.createElement('div');
+    bub.className='bubble me'+(extra?' '+extra:'');
+    bub.textContent=text;
+    row.appendChild(time);row.appendChild(bub);
+  }
+  wrap.appendChild(row);
+  msgs.appendChild(wrap);
+  msgs.scrollTop=msgs.scrollHeight;
+}
+
+function showPenalty(){
+  const t=document.getElementById('penalty-toast');
+  t.textContent=`-10점`;
+  t.style.opacity='1';
+  setTimeout(()=>t.style.opacity='0',1500);
+}
+
+// ──── RANDOM MODE ────
+let randPool=[], randOk=0,randNg=0,randScore=0,randCurrent=null,randSubmitted=false;
+
+function startRandom(){
+  randPool=shuffle(VERBS);randOk=0;randNg=0;randScore=0;randSubmitted=false;
+  document.getElementById('rand-ok').textContent='0';
+  document.getElementById('rand-ng').textContent='0';
+  document.getElementById('rand-score').textContent='0';
+  document.getElementById('rand-counter').textContent='0/30';
+  document.getElementById('rand-prog').style.width='0%';
+  showScreen('random');
+  randNext();
+}
+
+function randNext(){
+  document.getElementById('rand-fb').style.display='none';
+  document.getElementById('rand-next').style.display='none';
+  document.getElementById('rand-submit-btn').style.display='block';
+  if(randPool.length===0){
+    showResult('random',randScore,{정답:randOk,오답:randNg,정확도:Math.round(randOk/(randOk+randNg||1)*100)+'%'});
+    return;
+  }
+  randSubmitted=false;
+  randCurrent=randPool.pop();
+  const done=30-randPool.length;
+  document.getElementById('rand-counter').textContent=`${done}/30`;
+  document.getElementById('rand-prog').style.width=(done/30*100)+'%';
+  document.getElementById('rand-qword').textContent=randCurrent.b;
+  document.getElementById('rand-qhint').textContent=randCurrent.m;
+
+  // 입력창 초기화 및 Enter 이벤트 안전 바인딩
+  ['p','pp'].forEach(f=>{
+    const inp=document.getElementById('rand-inp-'+f);
+    const chk=document.getElementById('rand-check-'+f);
+    const box=inp.parentElement;
+    inp.value='';
+    inp.disabled=false;
+    inp.className='rand-inp';
+    chk.textContent='';
+    box.className='rand-input-box';
+    // 기존 이벤트 제거 후 재등록
+    const newInp=inp.cloneNode(true);
+    inp.parentNode.replaceChild(newInp,inp);
+  });
+  // Enter: p → pp 이동, pp → submit (keyup으로 전파 방지)
+  document.getElementById('rand-inp-p').addEventListener('keyup',function(e){
+    if(e.key==='Enter') document.getElementById('rand-inp-pp').focus();
+  });
+  document.getElementById('rand-inp-pp').addEventListener('keyup',function(e){
+    if(e.key==='Enter') randSubmit();
+  });
+  setTimeout(()=>document.getElementById('rand-inp-p').focus(),100);
+}
+
+function randSubmit(){
+  if(randSubmitted)return;
+  randSubmitted=true;
+  const inpP=document.getElementById('rand-inp-p');
+  const inpPP=document.getElementById('rand-inp-pp');
+  const valP=inpP.value.replace(/\s/g,'').toLowerCase();
+  const valPP=inpPP.value.replace(/\s/g,'').toLowerCase();
+  const ansP=randCurrent.p.replace(/\s/g,'').toLowerCase();
+  const ansPP=randCurrent.pp.replace(/\s/g,'').toLowerCase();
+  const okP=valP===ansP;
+  const okPP=valPP===ansPP;
+  const bothOk=okP&&okPP;
+
+  // 시각 피드백
+  [['p',okP,randCurrent.p],['pp',okPP,randCurrent.pp]].forEach(([f,ok,ans])=>{
+    const inp=document.getElementById('rand-inp-'+f);
+    const chk=document.getElementById('rand-check-'+f);
+    const box=inp.parentElement;
+    inp.disabled=true;
+    box.classList.add(ok?'ok':'ng');
+    chk.textContent=ok?'✓':'✗';
+    if(!ok){
+      // 오답이면 정답을 빨간 글씨로 보여줌
+      inp.value=ans;
+      inp.className='rand-inp revealed';
+    } else {
+      inp.className='rand-inp revealed-ok';
+    }
+  });
+
+  if(bothOk){randOk++;randScore+=20;}
+  else if(okP||okPP){randNg++;randScore+=5;}
+  else{randNg++;randScore=Math.max(0,randScore-5);}
+
+  document.getElementById('rand-ok').textContent=randOk;
+  document.getElementById('rand-ng').textContent=randNg;
+  document.getElementById('rand-score').textContent=randScore;
+
+  const fb=document.getElementById('rand-fb');
+  fb.style.display='flex';
+  if(bothOk){fb.className='fb-bar ok';fb.textContent=randPraise(PRAISE_FB)+' +20점';}
+  else if(okP||okPP){fb.className='fb-bar ng';fb.textContent=`△ 절반 정답 +5점 / 과거형: ${randCurrent.p} / p.p: ${randCurrent.pp}`;}
+  else{fb.className='fb-bar ng';fb.textContent=`✗ 오답! 과거형: ${randCurrent.p} / p.p: ${randCurrent.pp}`;}
+
+  document.getElementById('rand-submit-btn').style.display='none';
+  document.getElementById('rand-next').style.display='block';
+}
+
+// ──── SPEED MODE ────
+const SP_TOTAL_TIME = 60;
+const SP_COMBO_WINDOW = 2000; // 2초 이내 정답 시 콤보
+
+let spScore=0, spCombo=0, spTimeLeft=SP_TOTAL_TIME*10, spTimerInterval=null;
+let spCurrent=null, spStep=0; // step 0=과거형 선택, 1=과거분사 선택
+let spLastCorrectTime=0, spTotalCorrect=0, spMaxCombo=0;
+
+function startSpeed(){
+  spScore=0; spCombo=0; spTimeLeft=SP_TOTAL_TIME*10;
+  spTotalCorrect=0; spLastCorrectTime=0; spMaxCombo=0; spStep=0;
+  document.getElementById('sp-score').textContent='0';
+  document.getElementById('sp-combo').textContent='0';
+  document.getElementById('sp-time-val').textContent=SP_TOTAL_TIME+'.0';
+  document.getElementById('sp-time-val').classList.remove('danger');
+  document.getElementById('sp-combo-wrap').classList.remove('active');
+  showScreen('speed');
+  spNextQ();
+  spTimerInterval=setInterval(()=>{
+    spTimeLeft--;
+    const sec=(spTimeLeft/10).toFixed(1);
+    document.getElementById('sp-time-val').textContent=sec;
+    if(spTimeLeft<=50) document.getElementById('sp-time-val').classList.add('danger');
+    if(spTimeLeft<=0){ clearInterval(spTimerInterval); spEndGame(); }
+  },100);
+  addTimer(spTimerInterval);
+}
+
+function spNextQ(){
+  spStep=0;
+  spCurrent=VERBS[Math.floor(Math.random()*VERBS.length)];
+
+  // 동사 카드
+  document.getElementById('sp-verb-word').textContent=spCurrent.b;
+  document.getElementById('sp-verb-meaning').textContent='('+spCurrent.m+')';
+
+  // 단계 초기화
+  const s1=document.getElementById('sp-step-1');
+  const s2=document.getElementById('sp-step-2');
+  s1.className='sp-step active';
+  s2.className='sp-step';
+  document.getElementById('sp-step-val-1').textContent='?';
+  document.getElementById('sp-step-val-2').textContent='?';
+
+  spRenderChoices();
+}
+
+function spRenderChoices(){
+  // step 0: 과거형(p) 고르기, step 1: 과거분사(pp) 고르기
+  const field = spStep===0 ? 'p' : 'pp';
+  const correct = spCurrent[field];
+
+  // 오답 8개 + 정답 1개 → 9개 (같은 field 기준으로 겹치지 않게)
+  const wrongPool = shuffle(VERBS.filter(v=>v[field]!==correct));
+  const wrongs = wrongPool.slice(0,8).map(v=>v[field]);
+  const choices = shuffle([correct,...wrongs]);
+
+  const cc=document.getElementById('sp-choices');
+  cc.innerHTML='';
+  choices.forEach(c=>{
+    const btn=document.createElement('button');
+    btn.className='sp-choice-btn';
+    btn.textContent=c;
+    btn.onclick=()=>spAnswer(c,correct,btn,field);
+    cc.appendChild(btn);
+  });
+}
+
+function spAnswer(chosen,correct,btn,field){
+  if(spTimeLeft<=0)return;
+  const isCorrect=chosen===correct;
+
+  if(isCorrect){
+    btn.classList.add('correct');
+
+    if(spStep===0){
+      // 과거형 맞춤 → 단계1 완료, 단계2로
+      document.getElementById('sp-step-1').className='sp-step done';
+      document.getElementById('sp-step-val-1').textContent=chosen;
+      document.getElementById('sp-step-2').className='sp-step active';
+      spStep=1;
+      setTimeout(()=>spRenderChoices(),300);
+    } else {
+      // 과거분사까지 맞춤 → 문제 완료
+      document.getElementById('sp-step-2').className='sp-step done';
+      document.getElementById('sp-step-val-2').textContent=chosen;
+
+      const now=Date.now();
+      const inComboWindow=(now-spLastCorrectTime)<=SP_COMBO_WINDOW && spLastCorrectTime>0;
+      if(inComboWindow){ spCombo++; } else { spCombo=1; }
+      if(spCombo>spMaxCombo) spMaxCombo=spCombo;
+      spLastCorrectTime=now;
+      spTotalCorrect++;
+      const pts=10*spCombo;
+      spScore+=pts;
+
+      document.getElementById('sp-score').textContent=spScore;
+      document.getElementById('sp-combo').textContent=spCombo;
+      const cw=document.getElementById('sp-combo-wrap');
+      cw.classList.remove('active');
+      void cw.offsetWidth;
+      cw.classList.add('active');
+
+      setTimeout(()=>spNextQ(),450);
+    }
+  } else {
+    btn.classList.add('wrong');
+    // 콤보 리셋
+    spCombo=0;
+    spLastCorrectTime=0;
+    document.getElementById('sp-combo').textContent='0';
+    document.getElementById('sp-combo-wrap').classList.remove('active');
+    // 정답 잠깐 표시 후 같은 단계 재시도
+    document.querySelectorAll('.sp-choice-btn').forEach(b=>{
+      if(b.textContent===correct) b.classList.add('correct');
+      else if(b!==btn) b.classList.add('disabled');
+    });
+    setTimeout(()=>spRenderChoices(),700);
+  }
+}
+
+function spEndGame(){
+  clearTimers();
+  updateBest('speed',spScore);
+  showResult('speed',spScore,{정답:spTotalCorrect,최고콤보:spMaxCombo+'x',점수:spScore});
+}
+
+
+// ──── RESULT ────
+let _lastMode='';
+function showResult(mode,score,stats){
+  _lastMode=mode;
+  updateBest(mode,score);
+  const icons=['🎉','🏆','⭐','🔥','💪'];
+  document.getElementById('res-icon').textContent=score>80?'🏆':score>50?'🎉':score>20?'⭐':'💪';
+  document.getElementById('res-score').textContent=score;
+  document.getElementById('res-label').textContent='점수';
+  const statsDiv=document.getElementById('res-stats');
+  statsDiv.innerHTML=Object.entries(stats).map(([k,v])=>`<div class="rs"><div class="rv">${v}</div><div class="rl">${k}</div></div>`).join('');
+  showScreen('result');
+}
+function playAgain(){
+  if(_lastMode==='chat')startChat();
+  else if(_lastMode==='random')startRandom();
+  else if(_lastMode==='speed')startSpeed();
+}
+
+</script>
+</body>
+</html>
