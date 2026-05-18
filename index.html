@@ -109,30 +109,30 @@ body { font-family: 'Noto Sans KR', sans-serif; background: #1a1a2e; display: fl
 
 /* ── RANDOM ── */
 #random { background: #0d1b2a; }
-.game-header { padding: 54px 16px 14px; display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+.game-header { padding: 44px 16px 10px; display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
 .back-btn { color: #fff; font-size: 22px; cursor: pointer; padding: 4px 8px; }
 .game-title { color: #fff; font-weight: 700; font-size: 16px; flex: 1; }
-.progress-wrap { padding: 0 16px 12px; flex-shrink: 0; }
+.progress-wrap { padding: 0 16px 8px; flex-shrink: 0; }
 .progress-bar { height: 6px; background: rgba(255,255,255,.15); border-radius: 3px; overflow: hidden; }
 .progress-fill { height: 100%; background: linear-gradient(90deg,#fee500,#ff9800); border-radius: 3px; transition: width .3s; }
-.score-display { display: flex; gap: 16px; padding: 0 16px 16px; flex-shrink: 0; }
-.score-card { background: rgba(255,255,255,.07); border-radius: 12px; padding: 8px 14px; text-align: center; flex: 1; }
-.score-card .sv { font-size: 22px; font-weight: 900; color: #fff; }
-.score-card .sl { font-size: 11px; color: rgba(255,255,255,.5); }
+.score-display { display: flex; gap: 8px; padding: 0 16px 10px; flex-shrink: 0; }
+.score-card { background: rgba(255,255,255,.07); border-radius: 12px; padding: 6px 8px; text-align: center; flex: 1; }
+.score-card .sv { font-size: 18px; font-weight: 900; color: #fff; }
+.score-card .sl { font-size: 10px; color: rgba(255,255,255,.5); }
 .sv.ok { color: #4caf50; }
 .sv.ng { color: #f44336; }
-.q-card { margin: 0 16px 20px; background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1); border-radius: 24px; padding: 28px 20px; text-align: center; flex-shrink: 0; }
-.q-tag { font-size: 11px; color: rgba(255,255,255,.4); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; }
-.q-main { font-size: 36px; font-weight: 900; color: #fff; margin-bottom: 4px; }
+.q-card { margin: 0 16px 12px; background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1); border-radius: 20px; padding: 16px 20px; text-align: center; flex-shrink: 0; }
+.q-tag { font-size: 11px; color: rgba(255,255,255,.4); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; }
+.q-main { font-size: 30px; font-weight: 900; color: #fff; margin-bottom: 2px; }
 .q-hint { font-size: 13px; color: rgba(255,255,255,.5); }
 .choices-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 0 16px; }
 .rand-choice { padding: 16px; border-radius: 16px; border: 1.5px solid rgba(255,255,255,.15); background: rgba(255,255,255,.07); font-family: inherit; font-size: 15px; font-weight: 700; color: #fff; cursor: pointer; transition: all .12s; }
 .rand-choice:hover { background: rgba(255,255,255,.12); }
 .rand-choice.correct { background: rgba(76,175,80,.3); border-color: #4caf50; color: #a5d6a7; }
 .rand-choice.wrong { background: rgba(244,67,54,.3); border-color: #f44336; color: #ef9a9a; }
-.next-btn { margin: 16px; padding: 16px; border-radius: 16px; border: none; background: #fee500; color: #1a1a1a; font-family: inherit; font-size: 15px; font-weight: 900; cursor: pointer; width: calc(100% - 32px); transition: transform .1s; }
+.next-btn { margin: 10px 16px; padding: 13px; border-radius: 16px; border: none; background: #fee500; color: #1a1a1a; font-family: inherit; font-size: 15px; font-weight: 900; cursor: pointer; width: calc(100% - 32px); transition: transform .1s; }
 .next-btn:active { transform: scale(.98); }
-.fb-bar { height: 48px; margin: 12px 16px 0; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; }
+.fb-bar { height: 40px; margin: 8px 16px 0; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; }
 .fb-bar.ok { background: rgba(76,175,80,.2); color: #4caf50; }
 .fb-bar.ng { background: rgba(244,67,54,.2); color: #f44336; }
 
@@ -191,14 +191,14 @@ body { font-family: 'Noto Sans KR', sans-serif; background: #1a1a2e; display: fl
 
 
 /* ── RANDOM INPUT ── */
-.rand-input-wrap { padding: 0 16px; display: flex; flex-direction: column; gap: 12px; }
-.rand-input-row { display: flex; flex-direction: column; gap: 6px; }
+.rand-input-wrap { padding: 0 16px; display: flex; flex-direction: column; gap: 8px; }
+.rand-input-row { display: flex; flex-direction: column; gap: 4px; }
 .rand-label { font-size: 11px; font-weight: 700; color: rgba(255,255,255,.45); letter-spacing: .8px; text-transform: uppercase; }
 .rand-input-box { display: flex; align-items: center; background: rgba(255,255,255,.07); border: 1.5px solid rgba(255,255,255,.15); border-radius: 14px; padding: 0 14px; transition: border-color .15s; }
 .rand-input-box:focus-within { border-color: #fee500; }
 .rand-input-box.ok { border-color: #4caf50; background: rgba(76,175,80,.15); }
 .rand-input-box.ng { border-color: #f44336; background: rgba(244,67,54,.15); }
-.rand-inp { flex: 1; background: transparent; border: none; outline: none; padding: 14px 0; font-family: inherit; font-size: 18px; font-weight: 700; color: #fff; caret-color: #fee500; }
+.rand-inp { flex: 1; background: transparent; border: none; outline: none; padding: 11px 0; font-family: inherit; font-size: 16px; font-weight: 700; color: #fff; caret-color: #fee500; }
 .rand-inp::placeholder { color: rgba(255,255,255,.25); font-weight: 400; }
 .rand-inp-check { font-size: 20px; min-width: 24px; text-align: center; }
 .rand-inp.revealed { color: #f44336; }
